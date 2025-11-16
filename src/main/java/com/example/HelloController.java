@@ -46,7 +46,7 @@ public class HelloController {
     }
 
     public void setTopic() {
+        model.clearMessages();
         model.receiveMessage(topicLabel.getText());
-        messageView.getItems().clear();
     }
 }

@@ -26,13 +26,13 @@ public class HelloModel {
         return messages;
     }
 
-    public String getMessageToSend() {
-        return messageToSend.get();
-    }
-
-    public StringProperty messageToSendProperty() {
-        return messageToSend;
-    }
+//    public String getMessageToSend() {
+//        return messageToSend.get();
+//    }
+//
+//    public StringProperty messageToSendProperty() {
+//        return messageToSend;
+//    }
 
     public void setMessageToSend(String message) {
         messageToSend.set(message);
@@ -44,5 +44,9 @@ public class HelloModel {
 
     public void receiveMessage(String topicLabel) {
         connection.receive(m -> Platform.runLater(() -> messages.add(m)), topicLabel);
+    }
+
+    public void clearMessages() {
+        messages.clear();
     }
 }
