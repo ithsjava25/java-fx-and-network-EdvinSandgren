@@ -6,8 +6,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 /**
  * Model layer: encapsulates application data and business logic.
