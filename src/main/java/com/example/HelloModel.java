@@ -1,44 +1,50 @@
 package com.example;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.net.http.HttpClient;
-import java.util.Objects;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
-
-
+/**
+ * Model layer: encapsulates application data and business logic.
+ */
 public class HelloModel {
 
     private final NtfyConnection connection;
+
     private final ObservableList<NtfyMessageDto> messages = FXCollections.observableArrayList();
     private final StringProperty messageToSend = new SimpleStringProperty();
 
-    public  HelloModel(NtfyConnection connection) {
-        Dotenv dotenv = Dotenv.load();
-        hostName = Objects.requireNonNull(dotenv.get("HOST_NAME"));
-        receiveMessage();
+    public HelloModel(NtfyConnection connection, String topicLabel) {
         this.connection = connection;
+        receiveMessage(topicLabel);
     }
 
-    private void receiveMessage() {
-
+    public ObservableList<NtfyMessageDto> getMessages() {
+        return messages;
     }
 
-    public String getGreeting() {
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        return "Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".";
+    public String getMessageToSend() {
+        return messageToSend.get();
     }
 
-    public void sendMessage() {
-        connection.send(messageToSend.get());
+    public StringProperty messageToSendProperty() {
+        return messageToSend;
     }
 
-    public void setMessageToSend(String messageToSend) {
-        this.messageToSend.set(messageToSend);
+    public void setMessageToSend(String message) {
+        messageToSend.set(message);
+    }
+
+    public void sendMessage(String topicLabel) {
+        connection.send(messageToSend.get(), topicLabel);
+    }
+
+    public void receiveMessage(String topicLabel) {
+        connection.receive(m -> Platform.runLater(() -> messages.add(m)), topicLabel);
     }
 }
