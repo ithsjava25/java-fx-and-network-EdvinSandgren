@@ -1,7 +1,7 @@
 package com.example;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -11,10 +11,17 @@ import javafx.scene.control.TextField;
  */
 public class HelloController {
 
-    public TextField topicLabel =  new TextField("mytopic");
+    @FXML
+    private Button topicButton;
+    @FXML
+    private Button sendButton;
+    @FXML
+    private TextField topicLabel =  new TextField("mytopic");
     private final HelloModel model = new HelloModel(new NtfyConnectionImpl(), topicLabel.getText());
-    public ListView<NtfyMessageDto> messageView;
-    public TextArea messageField;
+    @FXML
+    private ListView<NtfyMessageDto> messageView;
+    @FXML
+    private TextArea messageField;
 
 
 
@@ -22,16 +29,22 @@ public class HelloController {
     private void initialize() {
         messageView.setItems(model.getMessages());
 
+        topicLabel.textProperty()
+                .addListener((ov, t, t1) -> topicButton.setDisable(t1.isEmpty()));
+
+        sendButton.setDisable(true);
+        messageField.textProperty()
+                .addListener((ov, t, t1) -> sendButton.setDisable(t1.isEmpty()));
     }
 
-    public void sendMessage(ActionEvent actionEvent) {
+    public void sendMessage() {
         model.setMessageToSend(messageField.getText());
-        messageField.setText(null);
+        messageField.setText("");
         model.sendMessage(topicLabel.getText());
-        model.setMessageToSend(null);
+        model.setMessageToSend("");
     }
 
-    public void setTopic(ActionEvent actionEvent) {
+    public void setTopic() {
         model.receiveMessage(topicLabel.getText());
         messageView.getItems().clear();
     }

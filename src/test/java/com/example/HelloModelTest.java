@@ -48,7 +48,7 @@ class HelloModelTest {
     }
 
     @Test
-    void receiveMessageFromFakeServer(WireMockRuntimeInfo wmRuntimeInfo) {
+    void receiveMessageTest() {
         var spy = new NtfyConnectionSpy();
         var model = new HelloModel(spy, "mytopic");
 

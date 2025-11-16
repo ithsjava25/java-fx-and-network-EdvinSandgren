@@ -14,7 +14,7 @@
          <HBox.margin>
             <Insets right="5.0" />
          </HBox.margin></TextField>
-      <Button onAction="#setTopic" mnemonicParsing="false" text="Set" />
+      <Button fx:id="topicButton" onAction="#setTopic" mnemonicParsing="false" text="Set" />
     </HBox>
     <ListView fx:id="messageView" />
 
@@ -25,12 +25,12 @@
             </HBox.margin>
         </TextArea>
         <VBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="60.0">
-            <Button prefHeight="20.0" prefWidth="50.0" text="Attach">
-                <VBox.margin>
-                    <Insets bottom="2.0" right="5.0" />
-                </VBox.margin>
-            </Button>
-            <Button onAction="#sendMessage" prefHeight="20.0" prefWidth="50.0" text="Send">
+<!--            <Button prefHeight="20.0" prefWidth="50.0" text="Attach">-->
+<!--                <VBox.margin>-->
+<!--                    <Insets bottom="2.0" right="5.0" />-->
+<!--                </VBox.margin>-->
+<!--            </Button>-->
+            <Button fx:id="sendButton" onAction="#sendMessage" prefHeight="20.0" prefWidth="50.0" text="Send">
                 <VBox.margin>
                     <Insets right="5.0" />
                 </VBox.margin>

@@ -3,12 +3,12 @@ package com.example;
 import io.github.cdimascio.dotenv.Dotenv;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class NtfyConnectionImpl implements NtfyConnection {
@@ -33,18 +33,14 @@ public class NtfyConnectionImpl implements NtfyConnection {
                 .header("Cache", "no")
                 .uri(URI.create(hostName + "/" + topicLabel))
                 .build();
+
+        var response = http.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
         try {
-            //Todo: handle long blocking send requests to not freeze the JavaFX thread
-            //1. Use thread send message?
-            //2. Use async?
-            var response = http.send(httpRequest, HttpResponse.BodyHandlers.discarding());
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error sending message");
-        } catch (InterruptedException e) {
-            System.out.println("Interruped sending message");
+            response.get();
+        } catch (InterruptedException | ExecutionException e) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
