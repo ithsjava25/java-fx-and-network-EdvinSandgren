@@ -16,8 +16,8 @@ public class HelloController {
     @FXML
     private Button sendButton;
     @FXML
-    private TextField topicLabel =  new TextField("mytopic");
-    private final HelloModel model = new HelloModel(new NtfyConnectionImpl(), topicLabel.getText());
+    private TextField topicLabel;
+    private HelloModel model;
     @FXML
     private ListView<NtfyMessageDto> messageView;
     @FXML
@@ -27,6 +27,7 @@ public class HelloController {
 
     @FXML
     private void initialize() {
+        model = new HelloModel(new NtfyConnectionImpl(), topicLabel.getText());
         messageView.setItems(model.getMessages());
 
         topicLabel.textProperty()

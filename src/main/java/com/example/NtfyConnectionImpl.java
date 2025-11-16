@@ -30,7 +30,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
     public boolean send(String message, String topicLabel) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(message))
-                .header("Cache", "no")
+                .header("Cache-Control", "no-cache")
                 .uri(URI.create(hostName + "/" + topicLabel))
                 .build();
 
@@ -52,8 +52,8 @@ public class NtfyConnectionImpl implements NtfyConnection {
 
         http.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofLines())
                 .thenAccept(response -> response.body()
-                        .map(s ->
-                                mapper.readValue(s, NtfyMessageDto.class))
+                        .map(s -> mapper.readValue(s, NtfyMessageDto.class))
+                        .filter(Objects::nonNull)
                         .filter(message -> message.event().equals("message"))
                         .peek(System.out::println)
                         .forEach(messageHandler));
