@@ -1,22 +1,52 @@
 package com.example;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
  */
 public class HelloController {
 
-    private final HelloModel model = new HelloModel();
-
     @FXML
-    private Label messageLabel;
+    private Button topicButton;
+    @FXML
+    private Button sendButton;
+    @FXML
+    private TextField topicLabel;
+    private HelloModel model;
+    @FXML
+    private ListView<NtfyMessageDto> messageView;
+    @FXML
+    private TextArea messageField;
+
+
 
     @FXML
     private void initialize() {
-        if (messageLabel != null) {
-            messageLabel.setText(model.getGreeting());
-        }
+        model = new HelloModel(new NtfyConnectionImpl(), topicLabel.getText());
+        messageView.setItems(model.getMessages());
+
+        topicLabel.textProperty()
+                .addListener((ov, t, t1) -> topicButton.setDisable(t1.isEmpty()));
+
+        sendButton.setDisable(true);
+        messageField.textProperty()
+                .addListener((ov, t, t1) -> sendButton.setDisable(t1.isEmpty()));
+    }
+
+    public void sendMessage() {
+        model.setMessageToSend(messageField.getText());
+        messageField.setText("");
+        model.sendMessage(topicLabel.getText());
+        model.setMessageToSend("");
+    }
+
+    public void setTopic() {
+        model.clearMessages();
+        model.receiveMessage(topicLabel.getText());
     }
 }
